@@ -1,0 +1,33 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Layout</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+</head>
+<body>
+    <div class="row" style="background-color:skyblue">
+        <h1 style="text-align:center"> Header Section</h1> 
+    </div>
+    <div class="row" style="background-color:skyblue">
+       <ul>
+           <li>@Html.ActionLink("Home","Index","Exam")</li>
+           <li>>@Html.ActionLink("Log in", "login", "Exam")</li>
+       </ul>
+    </div>
+    <div class="row" style="background-color:skyblue">
+       @RenderBody()
+    </div>
+    <div class="row" style="background-color:skyblue;text-align:center">
+         @DateTime.Now
+    </div>
+    @RenderSection("scripts",required:false)
+</body>
+</html>

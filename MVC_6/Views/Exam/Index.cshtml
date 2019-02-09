@@ -1,0 +1,160 @@
+﻿@model MVC_6.Model_View.StudentModel
+
+@{
+    Layout = "~/Views/Shared/Layout.cshtml";
+}
+<a href="/Exam/logout">Log out</a>
+
+<div class="col-md-6">
+    @using(Html.BeginForm())
+    {
+        <div class="form-group">
+            <label>ID</label>
+            @Html.TextBoxFor(m => m.ID, new { @id="id",@class="form-control",@readonly=true})
+
+        </div>
+          <div class="form-group">
+            <label>Name</label>
+            @Html.TextBoxFor(m => m.Name, new { @id="name",@class="form-control"})
+
+        </div>
+          <div class="form-group">
+            <label>Email</label>
+            @Html.TextBoxFor(m => m.Email, new { @id="email",@class="form-control"})
+
+        </div>
+          <div class="form-group">
+           <input type="button" onclick="return Save()" value="Save" />
+              <input type="button" onclick="return Update()" value="Update" />
+
+        </div>
+    }
+
+</div>
+<div class="col-md-6">
+    <table class="table table-bordered" id="tbl" >
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+@section scripts{
+<script src="~/Scripts/jquery-3.0.0.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            LoadData();
+        })
+
+        function LoadData() {
+            $.ajax({
+
+                url: "/Exam/Loaddata",
+                type: "GET",
+                dataType: "JSON"
+            }).done(function (result) {
+                $("#tbl tbody").empty();
+                for (var i = 0; i < result.length; i++) {
+                    $("#tbl tbody").append(
+
+                        "<tr><td>" + result[i].ID + "</td>" +
+                        "<td>" + result[i].Name + "</td>" +
+                         "<td>" + result[i].Email + "</td>" +
+                         "<td><button onclick='return editdata(" + result[i].ID + ")'>Edit</button> || <button onclick='return deletedata(" + result[i].ID + ")'>Delete</button></td>" + "</tr>"
+
+
+                        )
+                }
+            })
+        };
+
+        function Save() {
+
+            var stu = {
+                Name: $("#name").val(),
+                Email:$("#email").val()
+            }
+            $.ajax({
+
+                url: "/Exam/savedata",
+                type: "POST",
+                dataType: "JSON",
+                data: JSON.stringify(stu),
+                contentType: "application/json",
+                success: function (result) {
+                    LoadData();
+                }
+
+            })
+        }
+
+        function editdata(id) {
+
+            $.ajax({
+
+                url: "/Exam/finddata/" + id,
+                type: "GET",
+                dataType: "JSON"
+            }).done(function (result) {
+                $("#id").val(result[0].ID),
+                 $("#name").val(result[0].Name),
+                 $("#email").val(result[0].Email)
+            })
+        }
+
+        function Update() {
+
+            var stu = {
+                ID:$("#id").val(),
+                Name: $("#name").val(),
+                Email: $("#email").val()
+            }
+            $.ajax({
+
+                url: "/Exam/updatedata",
+                type: "POST",
+                dataType: "JSON",
+                data: JSON.stringify(stu),
+                contentType: "application/json",
+                success: function (result) {
+                    LoadData();
+                }
+
+            })
+
+        }
+
+        function deletedata(id)
+        {
+
+            $.ajax({
+
+                url: "/Exam/deletedata/" + id,
+                type: "POST",
+                dataType: "JSON"
+            }).done(function (result) {
+                LoadData();
+            })
+
+        }
+         
+
+       
+
+
+
+
+    </script>
+
+}
